@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  if user
+    p Hello 
+      b= user.username
+      |.
+
+  section
+    h1 Articles
+
+    each article in articles
+      article
+        header
+          h1: a(href='/' + formatDate(article.created_at, 'YYYY') + '/' + formatDate(article.created_at, 'MM') + '/' + article.slug)= article.title
+
+        footer
+          ul
+            li= formatDate(article.created_at)
+            
+        p= article.body

@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  form(method='post')
+    label Title
+    input(value=article.title, name='article[title]')
+
+    label Body
+    textarea(name='article[body]')= article.body
+
+    input(type='hidden', name='article[id]', value=article._id)
+
+    input(type='submit')
