@@ -17,8 +17,11 @@ var ArticleModel = function (host, port) {
   }, {});
   this.db = new Db('OliverJAsh', this.server);
 
-  this.db.open(function () {});
+  var self = this;
 
+  this.db.open(function (error, connection) {
+    self.connection = connection;
+  });
 };
 
 ArticleModel.prototype.getCollection = function (callback) {
@@ -92,14 +95,20 @@ ArticleModel.prototype.create = function (article, callback) {
 
 ArticleModel.prototype.update = function (article, callback) {
 
+  var self = this;
+
   this.getCollection(function (error, articles) {
     if (error) {
       callback(error);
     } else {
-      console.log(article);
+      // We can't edit the article with the ID assigned, so we convert it to a
+      // Mongo ID and then delete it from the object.
+      var id = self.connection.bson_serializer.ObjectID(article._id);
+      delete article._id;
 
-      articles.update({ _id: article._id }, { $addToSet: article }, { safe: true }, function (error) {
+      articles.update({ _id: id }, { $set: article }, { safe: true }, function (error) {
         console.log(error);
+
         callback(null, article);
       });
     }

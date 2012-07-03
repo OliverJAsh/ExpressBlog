@@ -30,11 +30,8 @@ module.exports = function (app) {
   });
 
   app.post('/admin/edit-article/*', function (request, response) {
-    console.log(request.body.article);
-
     articleModel.update(request.body.article, function () {
       response.end();
-
     });
 
   });
